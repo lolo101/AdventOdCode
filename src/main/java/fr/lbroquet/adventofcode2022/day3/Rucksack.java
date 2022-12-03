@@ -1,11 +1,9 @@
 package fr.lbroquet.adventofcode2022.day3;
 
-public class Rucksack {
-    private final String line;
+import java.util.Collection;
+import java.util.TreeSet;
 
-    public Rucksack(String line) {
-        this.line = line;
-    }
+public record Rucksack(String line) {
 
     public int priority() {
         int splitIndex = line.length() / 2;
@@ -15,11 +13,13 @@ public class Rucksack {
     }
 
     private static int priority(String firstCompartment, String secondCompartment) {
-        int type = firstCompartment.chars()
-                .filter(c -> secondCompartment.indexOf(c) != -1)
-                .findFirst()
-                .orElseThrow();
-        return priority(type);
+        Collection<Integer> firstTypes = firstCompartment.chars()
+                .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
+        Collection<Integer> secondTypes = secondCompartment.chars()
+                .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
+
+        firstTypes.retainAll(secondTypes);
+        return priority(firstTypes.iterator().next());
     }
 
     private static int priority(int common) {
