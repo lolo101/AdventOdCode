@@ -14,9 +14,9 @@ public class Main {
     }
 
     private static int score(String line) {
-        Shape myShape = Shape.from(line.charAt(2));
+        Outcome outcome = Outcome.from(line.charAt(2));
         Shape opponentShape = Shape.from(line.charAt(0));
-        return myShape.score() + myShape.outcome(opponentShape).score();
+        Shape myShape = outcome.shape(opponentShape);
+        return myShape.score() + outcome.score();
     }
-
 }

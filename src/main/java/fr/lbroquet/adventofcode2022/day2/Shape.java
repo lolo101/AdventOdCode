@@ -1,7 +1,5 @@
 package fr.lbroquet.adventofcode2022.day2;
 
-import static fr.lbroquet.adventofcode2022.day2.Outcome.*;
-
 public enum Shape {
     ROCK(1),
     PAPER(2),
@@ -15,23 +13,30 @@ public enum Shape {
 
     public static Shape from(char input) {
         return switch (input) {
-            case 'A', 'X' -> ROCK;
-            case 'B', 'Y' -> PAPER;
-            case 'C', 'Z' -> SCISSOR;
+            case 'A' -> ROCK;
+            case 'B' -> PAPER;
+            case 'C' -> SCISSOR;
             default -> throw new IllegalArgumentException("Unexpected input: " + input);
-        };
-    }
-
-    public Outcome outcome(Shape opponentShape) {
-        if (this == opponentShape) return DRAW;
-        return switch (this) {
-            case ROCK -> opponentShape == PAPER ? LOSE : WIN;
-            case PAPER -> opponentShape == SCISSOR ? LOSE : WIN;
-            case SCISSOR -> opponentShape == ROCK ? LOSE : WIN;
         };
     }
 
     public int score() {
         return score;
+    }
+
+    public Shape beats() {
+        return switch (this) {
+            case ROCK -> SCISSOR;
+            case PAPER -> ROCK;
+            case SCISSOR -> PAPER;
+        };
+    }
+
+    public Shape beaten() {
+        return switch (this) {
+            case ROCK -> PAPER;
+            case PAPER -> SCISSOR;
+            case SCISSOR -> ROCK;
+        };
     }
 }
