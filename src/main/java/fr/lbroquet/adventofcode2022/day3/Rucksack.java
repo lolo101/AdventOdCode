@@ -15,11 +15,11 @@ public class Rucksack {
     }
 
     private static int priority(String firstCompartment, String secondCompartment) {
-        return firstCompartment.chars()
+        int type = firstCompartment.chars()
                 .filter(c -> secondCompartment.indexOf(c) != -1)
-                .distinct()
-                .map(Rucksack::priority)
-                .sum();
+                .findFirst()
+                .orElseThrow();
+        return priority(type);
     }
 
     private static int priority(int common) {
