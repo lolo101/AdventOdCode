@@ -7,6 +7,11 @@ import java.io.BufferedReader;
 public class Main {
     public static void main(String[] args) {
         BufferedReader input = Input.load(Main.class);
-        input.lines().forEach(System.out::println);
+        Elves elevs = input.lines().collect(
+                Elves::new,
+                Elves::addCalories,
+                (e1, e2) -> {}
+        );
+        System.out.println(elevs);
     }
 }
