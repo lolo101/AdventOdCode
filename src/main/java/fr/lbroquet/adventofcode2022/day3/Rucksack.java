@@ -13,18 +13,14 @@ public record Rucksack(String itemsTypes) {
     }
 
     private static int priority(String firstCompartment, String secondCompartment) {
-        Collection<Integer> firstTypes = firstCompartment.chars()
+        Collection<ItemType> firstTypes = firstCompartment.chars()
+                .mapToObj(ItemType::new)
                 .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
-        Collection<Integer> secondTypes = secondCompartment.chars()
+        Collection<ItemType> secondTypes = secondCompartment.chars()
+                .mapToObj(ItemType::new)
                 .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
 
         firstTypes.retainAll(secondTypes);
-        return priority(firstTypes.iterator().next());
-    }
-
-    private static int priority(int common) {
-        return (Character.isLowerCase(common)
-                ? 1 + common - 'a'
-                : 27 + common - 'A');
+        return firstTypes.iterator().next().priority();
     }
 }
