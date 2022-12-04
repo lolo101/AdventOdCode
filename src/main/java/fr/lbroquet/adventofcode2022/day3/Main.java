@@ -11,6 +11,12 @@ public class Main {
                 .map(Rucksack::new)
                 .mapToInt(Rucksack::priority)
                 .sum();
-        System.out.println(priority);
+        Groups groups = input.lines()
+                .map(Rucksack::new)
+                .collect(Groups::new, Groups::add, (g1, g2) -> {});
+        System.out.printf("""
+                Rucksacks priorities sum: %d
+                Groups priorities sum: %d
+                """, priority, groups.priority());
     }
 }

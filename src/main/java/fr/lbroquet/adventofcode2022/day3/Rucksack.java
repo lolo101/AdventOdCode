@@ -3,12 +3,12 @@ package fr.lbroquet.adventofcode2022.day3;
 import java.util.Collection;
 import java.util.TreeSet;
 
-public record Rucksack(String line) {
+public record Rucksack(String itemsTypes) {
 
     public int priority() {
-        int splitIndex = line.length() / 2;
-        String firstCompartment = line.substring(0, splitIndex);
-        String secondCompartment = line.substring(splitIndex);
+        int splitIndex = itemsTypes.length() / 2;
+        String firstCompartment = itemsTypes.substring(0, splitIndex);
+        String secondCompartment = itemsTypes.substring(splitIndex);
         return priority(firstCompartment, secondCompartment);
     }
 
