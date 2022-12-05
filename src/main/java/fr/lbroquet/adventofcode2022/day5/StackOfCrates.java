@@ -1,5 +1,6 @@
 package fr.lbroquet.adventofcode2022.day5;
 
+import java.util.List;
 import java.util.Stack;
 
 import static java.util.stream.Collectors.toCollection;
@@ -24,8 +25,9 @@ public class StackOfCrates {
     }
 
     public void transferTo(StackOfCrates destination, int quantity) {
-        for (int number = 0; number < quantity; number++) {
-            destination.stack.push(stack.pop());
-        }
+        int size = stack.size();
+        List<Crate> topCrates = stack.subList(size - quantity, size);
+        destination.stack.addAll(topCrates);
+        topCrates.clear();
     }
 }
