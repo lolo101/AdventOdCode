@@ -11,5 +11,6 @@ public class Main {
         Protocol protocol = new Protocol(stream);
 
         System.out.println(protocol.startOfPacket());
+        System.out.println(protocol.startOfMessage());
     }
 }

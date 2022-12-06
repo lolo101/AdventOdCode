@@ -18,4 +18,16 @@ public class Protocol {
         }
         return StartOfPacket.NotFound;
     }
+
+    public StartOfMessage startOfMessage() {
+        for (int index = 14; index <= stream.length(); index++) {
+            String candidate = stream.substring(index - 14, index);
+            var distinctChars = candidate
+                    .chars()
+                    .distinct()
+                    .count();
+            if (distinctChars == 14) return new StartOfMessage(index, candidate);
+        }
+        return StartOfMessage.NotFound;
+    }
 }
