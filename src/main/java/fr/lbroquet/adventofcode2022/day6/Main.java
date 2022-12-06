@@ -8,8 +8,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String stream = Input.load(Main.class).readLine();
 
-        StartOfPacket startOfPacket = new StartOfPacket(stream);
+        Protocol protocol = new Protocol(stream);
 
-        System.out.println(startOfPacket.index());
+        System.out.println(protocol.startOfPacket());
     }
 }
