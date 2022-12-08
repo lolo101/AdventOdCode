@@ -7,27 +7,23 @@ public class Protocol {
         this.stream = stream;
     }
 
-    public StartOfPacket startOfPacket() {
-        for (int index = 4; index <= stream.length(); index++) {
-            String candidate = stream.substring(index - 4, index);
-            var distinctChars = candidate
-                    .chars()
-                    .distinct()
-                    .count();
-            if (distinctChars == 4) return new StartOfPacket(index, candidate);
-        }
-        return StartOfPacket.NotFound;
+    public Marker startOfPacket() {
+        return findMarkerOfSize(4);
     }
 
-    public StartOfMessage startOfMessage() {
-        for (int index = 14; index <= stream.length(); index++) {
-            String candidate = stream.substring(index - 14, index);
+    public Marker startOfMessage() {
+        return findMarkerOfSize(14);
+    }
+
+    private Marker findMarkerOfSize(int size) {
+        for (int index = size; index <= stream.length(); index++) {
+            String candidate = stream.substring(index - size, index);
             var distinctChars = candidate
-                    .chars()
-                    .distinct()
-                    .count();
-            if (distinctChars == 14) return new StartOfMessage(index, candidate);
+                .chars()
+                .distinct()
+                .count();
+            if (distinctChars == size) return new Marker(index, candidate);
         }
-        return StartOfMessage.NotFound;
+        return Marker.NotFound;
     }
 }
