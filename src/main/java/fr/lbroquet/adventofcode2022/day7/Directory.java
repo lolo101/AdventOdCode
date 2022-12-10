@@ -1,12 +1,13 @@
 package fr.lbroquet.adventofcode2022.day7;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public final class Directory extends Node {
 
     private static final NodeName PARENT_NAME = new NodeName("..");
-    private final Map<NodeName, Node> nodes = new HashMap<>();
+    private final Map<NodeName, Node> nodes = new LinkedHashMap<>();
 
     public Directory(NodeName name, Directory parent) {
         super(name);
@@ -29,6 +30,15 @@ public final class Directory extends Node {
                 .map(Map.Entry::getValue)
                 .mapToInt(Node::size)
                 .sum();
+    }
+
+    public Stream<Directory> scanDirectoriesDepthFirst() {
+        Stream<Directory> directoryStream = nodes.entrySet().stream()
+                .filter(e -> !e.getKey().equals(PARENT_NAME))
+                .map(Map.Entry::getValue)
+                .filter(node -> node instanceof Directory)
+                .flatMap(directory -> ((Directory) directory).scanDirectoriesDepthFirst());
+        return Stream.concat(Stream.of(this), directoryStream);
     }
 
     private Node node(String listing) {

@@ -12,4 +12,9 @@ public sealed abstract class Node permits File, Directory {
     }
 
     public abstract int size();
+
+    @Override
+    public String toString() {
+        return name.name();
+    }
 }
