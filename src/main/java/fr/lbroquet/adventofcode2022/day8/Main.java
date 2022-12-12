@@ -13,6 +13,7 @@ public class Main {
                         Forest::merge);
 
         System.out.println(forest.countVisibleTrees());
+        System.out.println(forest.highestScenicScore());
         System.out.println(forest.printVisibleTrees());
     }
 
