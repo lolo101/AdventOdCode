@@ -10,6 +10,7 @@ public class Main {
                 .map(Movement::of)
                 .forEach(rope::move);
 
-        System.out.println(rope.tailPositions.size());
+        System.out.println(rope.tailPositions().size());
+        System.out.println(rope.printTailPositions());
     }
 }
