@@ -26,15 +26,19 @@ public class Rope {
     }
 
     private void tailFollows() {
-        for (int knotNumber = 1; knotNumber < knots.size(); knotNumber++) {
-            Position previousKnot = knots.get(knotNumber - 1).peek();
-            Stack<Position> knotPositions = knots.get(knotNumber);
-            for (
-                    Position knotLastPosition = knotPositions.peek();
-                    knotLastPosition.distance(previousKnot) > 1;
-                    knotLastPosition = knotPositions.peek()
-            ) {
-                knotPositions.push(knotLastPosition.oneStepToward(previousKnot));
+        Position head = knots.get(0).peek();
+        Stack<Position> tailHeadPositions = knots.get(1);
+        for (
+                Position tailHead = tailHeadPositions.peek();
+                tailHead.distance(head) > 1;
+                tailHead = tailHeadPositions.peek()
+        ) {
+            for (int knotNumber = 1; knotNumber < knots.size(); knotNumber++) {
+                Position previousKnot = knots.get(knotNumber - 1).peek();
+                Stack<Position> knotPositions = knots.get(knotNumber);
+                Position knotLastPosition = knotPositions.peek();
+                if (knotLastPosition.distance(previousKnot) > 1)
+                    knotPositions.push(knotLastPosition.oneStepToward(previousKnot));
             }
         }
     }
