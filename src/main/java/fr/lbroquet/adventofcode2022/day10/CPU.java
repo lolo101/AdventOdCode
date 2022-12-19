@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CPU {
-    private final List<Integer> registerValueAtCycle = new ArrayList<>();
+    final List<Integer> registerValueAtCycle = new ArrayList<>();
 
     public CPU() {
         registerValueAtCycle.add(1);

@@ -13,5 +13,7 @@ public class Main {
                         ((cpu1, cpu2) -> cpu1)
                 );
         System.out.println(cpu.signalStrengths().stream().reduce(0, Integer::sum));
+        CRT crt = new CRT(cpu);
+        System.out.println(crt.print());
     }
 }
