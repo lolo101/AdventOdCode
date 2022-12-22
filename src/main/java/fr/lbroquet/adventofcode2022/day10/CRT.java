@@ -12,7 +12,7 @@ public class CRT {
 
     public CRT(CPU cpu) {
         this.cpu = cpu;
-        Arrays.fill(screen, '.');
+        Arrays.fill(screen, ' ');
     }
 
     public String print() {
@@ -25,7 +25,7 @@ public class CRT {
             int spriteCenter = cpu.registerValueAtCycle.get(cycle);
             int crtColumn = cycle % WIDTH;
             if (spriteVisible(spriteCenter, crtColumn)) {
-                screen[cycle] = '#';
+                screen[cycle] = '█';
             }
         }
     }
