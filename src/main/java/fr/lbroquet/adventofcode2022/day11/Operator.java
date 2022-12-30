@@ -2,7 +2,7 @@ package fr.lbroquet.adventofcode2022.day11;
 
 import java.util.function.BinaryOperator;
 
-enum Operator {
+public enum Operator {
     PLUS(Integer::sum),
     TIMES(Math::multiplyExact);
 
