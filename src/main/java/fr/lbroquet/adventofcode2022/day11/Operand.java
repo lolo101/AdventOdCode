@@ -7,8 +7,8 @@ public class Operand {
         this.operand = operand;
     }
 
-    public int old(Item item) {
-        return operand.equals("old") ? item.worryLevel() : Integer.parseInt(operand);
+    public WorryLevel old(WorryLevel item) {
+        return operand.equals("old") ? item : new WorryLevel(operand);
     }
 
     @Override

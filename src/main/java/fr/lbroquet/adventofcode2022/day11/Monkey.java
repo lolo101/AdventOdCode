@@ -3,7 +3,7 @@ package fr.lbroquet.adventofcode2022.day11;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -18,17 +18,17 @@ public class Monkey {
     private static final Pattern TEST_PATTERN = Pattern.compile(" {2}Test: divisible by (?<divisor>\\d+)");
     private static final Pattern IF_TRUE_PATTERN = Pattern.compile(" {4}If true: throw to monkey (?<targetWhenTrue>\\d+)");
     private static final Pattern IF_FALSE_PATTERN = Pattern.compile(" {4}If false: throw to monkey (?<targetWhenFalse>\\d+)");
-    private final int number;
-    private final Queue<Item> items;
+    private final MonkeyNumber number;
+    private final Queue<WorryLevel> items;
     private final Operation operation;
-    private final UnaryOperator<Integer> monkeySelector;
+    private final Function<WorryLevel, MonkeyNumber> monkeySelector;
     private int inspections;
 
-    private Monkey(int number, String[] items, String operation, UnaryOperator<Integer> monkeySelector) {
-        this.number = number;
+    private Monkey(int number, String[] items, String operation, Function<WorryLevel, MonkeyNumber> monkeySelector) {
+        this.number = new MonkeyNumber(number);
         this.items = Stream.of(items)
                 .mapToInt(Integer::parseInt)
-                .mapToObj(Item::new)
+                .mapToObj(WorryLevel::new)
                 .collect(toCollection(ArrayDeque::new));
         this.operation = new Operation(operation);
         this.monkeySelector = monkeySelector;
@@ -51,21 +51,11 @@ public class Monkey {
         throw new IllegalArgumentException("No match for group %s of pattern %s in string %s".formatted(groupName, pattern, line));
     }
 
-    private static UnaryOperator<Integer> selector(int divisor, int ifTrue, int ifFalse) {
-        return worryLevel -> {
-            boolean divisible = worryLevel % divisor == 0;
-            if(divisible) {
-                System.out.printf("    Current worry level is divisible by %d.%n", divisor);
-                System.out.printf("    Item with worry level %d is thrown to monkey %d.%n", worryLevel, ifTrue);
-                return ifTrue;
-            }
-            System.out.printf("    Current worry level is not divisible by %d.%n", divisor);
-            System.out.printf("    Item with worry level %d is thrown to monkey %d.%n", worryLevel, ifFalse);
-            return ifFalse;
-        };
+    private static Function<WorryLevel, MonkeyNumber> selector(int divisor, int ifTrue, int ifFalse) {
+        return worryLevel ->  new MonkeyNumber(worryLevel.value() % divisor == 0 ? ifTrue : ifFalse);
     }
 
-    public int number() {
+    public MonkeyNumber number() {
         return number;
     }
 
@@ -73,38 +63,29 @@ public class Monkey {
         return inspections;
     }
 
-    public Collection<Item> items() {
+    public Collection<WorryLevel> items() {
         return items;
     }
 
-    public void recieve(Collection<Item> items) {
+    public void recieve(Collection<WorryLevel> items) {
         this.items.addAll(items);
     }
 
-    public Map<Integer, List<Item>> playOneRound() {
-        Map<Integer, List<Item>> thrown = new HashMap<>();
+    public Map<MonkeyNumber, List<WorryLevel>> playOneRound() {
+        Map<MonkeyNumber, List<WorryLevel>> thrown = new HashMap<>();
         while (!items.isEmpty()) {
-            Item item = items.remove();
-            Item inspectedItem = bored(inspect(item));
-            int targetNumber = monkeySelector.apply(inspectedItem.worryLevel());
-            List<Item> targetItems = thrown.getOrDefault(targetNumber, new ArrayList<>());
+            WorryLevel item = items.remove();
+            WorryLevel inspectedItem = inspect(item);
+            MonkeyNumber target = monkeySelector.apply(inspectedItem);
+            List<WorryLevel> targetItems = thrown.getOrDefault(target, new ArrayList<>());
             targetItems.add(inspectedItem);
-            thrown.put(targetNumber, targetItems);
+            thrown.put(target, targetItems);
         }
         return thrown;
     }
 
-    private static Item bored(Item item) {
-        Item boringItem = item.relief();
-        System.out.printf("    Monkey gets bored with item. Worry level is divided by 3 to %d.%n", boringItem.worryLevel());
-        return boringItem;
-    }
-
-    private Item inspect(Item item) {
+    private WorryLevel inspect(WorryLevel item) {
         inspections++;
-        System.out.printf("  Monkey inspects an item with a worry level of %s.%n", item.worryLevel());
-        Item inspectedItem = operation.operate(item);
-        System.out.printf("    Worry level %s to %d.%n", operation, inspectedItem.worryLevel());
-        return inspectedItem;
+        return operation.operate(item);
     }
 }

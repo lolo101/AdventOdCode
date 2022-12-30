@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Operation {
-    private static final Pattern OPERATION_DETAILS_PATTERN = Pattern.compile("old (?<operator>\\+|\\*) (?<operand>old|\\d+)");
+    private static final Pattern OPERATION_DETAILS_PATTERN = Pattern.compile("old (?<operator>[+*]) (?<operand>old|\\d+)");
     private final Operator operator;
     private final Operand operand;
 
@@ -17,8 +17,8 @@ public class Operation {
         operand = new Operand(matcher.group("operand"));
     }
 
-    public Item operate(Item item) {
-        return new Item(operator.apply(item.worryLevel(), operand.old(item)));
+    public WorryLevel operate(WorryLevel item) {
+        return operator.apply(item, operand.old(item));
     }
 
     @Override

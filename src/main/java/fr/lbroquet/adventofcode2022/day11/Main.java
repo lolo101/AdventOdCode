@@ -6,9 +6,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class Main {
+
+    private static final int NUMBER_OF_RONDS = 10_000;
+
     public static void main(String[] args) throws IOException {
         Monkeys monkeys = readMonkeys();
-        for (int round = 0; round < 20; round++) {
+        for (int round = 0; round < NUMBER_OF_RONDS; round++) {
             monkeys.playOneRound();
             System.out.printf("After round %d, the monkeys are holding items with these worry levels:%n", round);
             monkeys.printItems();

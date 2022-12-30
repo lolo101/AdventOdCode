@@ -5,7 +5,7 @@ import java.util.*;
 import static java.util.stream.Collectors.joining;
 
 public class Monkeys {
-    private final SortedMap<Integer, Monkey> monkeys = new TreeMap<>();
+    private final SortedMap<MonkeyNumber, Monkey> monkeys = new TreeMap<>();
 
     public void add(Monkey monkey) {
         monkeys.put(monkey.number(), monkey);
@@ -13,8 +13,8 @@ public class Monkeys {
 
     public void playOneRound() {
         for (Monkey monkey : monkeys.values()) {
-            System.out.printf("Monkey %d:%n", monkey.number());
-            Map<Integer, List<Item>> thrown = monkey.playOneRound();
+            System.out.printf("Monkey %s:%n", monkey.number());
+            Map<MonkeyNumber, List<WorryLevel>> thrown = monkey.playOneRound();
             thrown.forEach((number, items) -> monkeys.get(number).recieve(items));
         }
     }
@@ -30,11 +30,11 @@ public class Monkeys {
 
     public void printItems() {
         monkeys.forEach((number, monkey) -> System.out.printf(
-                "Monkey %d: %s%n",
+                "Monkey %s: %s%n",
                 number,
                 monkey.items()
                         .stream()
-                        .mapToInt(Item::worryLevel)
+                        .mapToLong(WorryLevel::value)
                         .mapToObj(Objects::toString)
                         .collect(joining(", "))
                 )
