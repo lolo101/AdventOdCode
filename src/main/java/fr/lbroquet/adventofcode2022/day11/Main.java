@@ -12,9 +12,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Monkeys monkeys = readMonkeys();
         for (int round = 0; round < NUMBER_OF_RONDS; round++) {
+            System.out.println("Round " + round);
             monkeys.playOneRound();
-            System.out.printf("After round %d, the monkeys are holding items with these worry levels:%n", round);
-            monkeys.printItems();
         }
         System.out.printf("Monkey business level: %d%n", monkeys.monkeyBusiness());
     }

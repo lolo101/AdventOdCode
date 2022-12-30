@@ -52,7 +52,7 @@ public class Monkey {
     }
 
     private static Function<WorryLevel, MonkeyNumber> selector(int divisor, int ifTrue, int ifFalse) {
-        return worryLevel ->  new MonkeyNumber(worryLevel.value() % divisor == 0 ? ifTrue : ifFalse);
+        return worryLevel ->  new MonkeyNumber(worryLevel.divisibleBy(divisor) ? ifTrue : ifFalse);
     }
 
     public MonkeyNumber number() {
@@ -61,10 +61,6 @@ public class Monkey {
 
     public int inspections() {
         return inspections;
-    }
-
-    public Collection<WorryLevel> items() {
-        return items;
     }
 
     public void recieve(Collection<WorryLevel> items) {
