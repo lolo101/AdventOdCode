@@ -11,6 +11,7 @@ public enum Operator {
     Operator(BinaryOperator<WorryLevel> application) {
         this.application = application;
     }
+
     public static Operator of(String symbol) {
         return switch (symbol) {
             case "+" -> PLUS;

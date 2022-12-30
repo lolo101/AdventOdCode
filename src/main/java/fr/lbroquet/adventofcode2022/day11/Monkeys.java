@@ -1,6 +1,9 @@
 package fr.lbroquet.adventofcode2022.day11;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class Monkeys {
     private final SortedMap<MonkeyNumber, Monkey> monkeys = new TreeMap<>();
@@ -11,8 +14,7 @@ public class Monkeys {
 
     public void playOneRound() {
         for (Monkey monkey : monkeys.values()) {
-            Map<MonkeyNumber, List<WorryLevel>> thrown = monkey.playOneRound();
-            thrown.forEach((number, items) -> monkeys.get(number).recieve(items));
+            monkey.playOneRound(monkeys);
         }
     }
 

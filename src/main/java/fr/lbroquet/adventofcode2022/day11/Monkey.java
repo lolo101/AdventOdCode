@@ -2,7 +2,9 @@ package fr.lbroquet.adventofcode2022.day11;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Map;
+import java.util.Queue;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,12 +49,12 @@ public class Monkey {
 
     private static String read(Pattern pattern, String groupName, String line) {
         Matcher matcher = pattern.matcher(line);
-        if(matcher.matches()) return matcher.group(groupName);
+        if (matcher.matches()) return matcher.group(groupName);
         throw new IllegalArgumentException("No match for group %s of pattern %s in string %s".formatted(groupName, pattern, line));
     }
 
     private static Function<WorryLevel, MonkeyNumber> selector(int divisor, int ifTrue, int ifFalse) {
-        return worryLevel ->  new MonkeyNumber(worryLevel.divisibleBy(divisor) ? ifTrue : ifFalse);
+        return worryLevel -> new MonkeyNumber(worryLevel.divisibleBy(divisor) ? ifTrue : ifFalse);
     }
 
     public MonkeyNumber number() {
@@ -63,21 +65,13 @@ public class Monkey {
         return inspections;
     }
 
-    public void recieve(Collection<WorryLevel> items) {
-        this.items.addAll(items);
-    }
-
-    public Map<MonkeyNumber, List<WorryLevel>> playOneRound() {
-        Map<MonkeyNumber, List<WorryLevel>> thrown = new HashMap<>();
+    public void playOneRound(Map<MonkeyNumber, Monkey> monkeys) {
         while (!items.isEmpty()) {
             WorryLevel item = items.remove();
             WorryLevel inspectedItem = inspect(item);
             MonkeyNumber target = monkeySelector.apply(inspectedItem);
-            List<WorryLevel> targetItems = thrown.getOrDefault(target, new ArrayList<>());
-            targetItems.add(inspectedItem);
-            thrown.put(target, targetItems);
+            monkeys.get(target).items.add(inspectedItem);
         }
-        return thrown;
     }
 
     private WorryLevel inspect(WorryLevel item) {
