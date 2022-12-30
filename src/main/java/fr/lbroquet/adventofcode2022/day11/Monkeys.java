@@ -2,6 +2,8 @@ package fr.lbroquet.adventofcode2022.day11;
 
 import java.util.*;
 
+import static java.util.stream.Collectors.joining;
+
 public class Monkeys {
     private final SortedMap<Integer, Monkey> monkeys = new TreeMap<>();
 
@@ -27,6 +29,15 @@ public class Monkeys {
     }
 
     public void printItems() {
-        monkeys.forEach((number, monkey) -> System.out.printf("Monkey %d: %s%n", number, monkey.items()));
+        monkeys.forEach((number, monkey) -> System.out.printf(
+                "Monkey %d: %s%n",
+                number,
+                monkey.items()
+                        .stream()
+                        .mapToInt(Item::worryLevel)
+                        .mapToObj(Objects::toString)
+                        .collect(joining(", "))
+                )
+        );
     }
 }

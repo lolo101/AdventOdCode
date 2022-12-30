@@ -86,7 +86,10 @@ public class Monkey {
         while (!items.isEmpty()) {
             Item item = items.remove();
             Item inspectedItem = bored(inspect(item));
-            thrown.getOrDefault(monkeySelector.apply(inspectedItem.worryLevel()), new ArrayList<>()).add(inspectedItem);
+            int targetNumber = monkeySelector.apply(inspectedItem.worryLevel());
+            List<Item> targetItems = thrown.getOrDefault(targetNumber, new ArrayList<>());
+            targetItems.add(inspectedItem);
+            thrown.put(targetNumber, targetItems);
         }
         return thrown;
     }
