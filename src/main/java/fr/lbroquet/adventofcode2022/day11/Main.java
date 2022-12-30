@@ -8,7 +8,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         Monkeys monkeys = readMonkeys();
-        monkeys.playOneRound();
+        for (int round = 0; round < 20; round++) {
+            monkeys.playOneRound();
+        }
+        System.out.printf("Monkey business level: %d%n", monkeys.monkeyBusiness());
     }
 
     private static Monkeys readMonkeys() throws IOException {

@@ -22,6 +22,7 @@ public class Monkey {
     private final Queue<Item> items;
     private final Operation operation;
     private final UnaryOperator<Integer> monkeySelector;
+    private int inspections;
 
     private Monkey(int number, String[] items, String operation, UnaryOperator<Integer> monkeySelector) {
         this.number = number;
@@ -73,6 +74,7 @@ public class Monkey {
         Map<Integer, List<Item>> thrown = new HashMap<>();
         while (!items.isEmpty()) {
             Item item = items.remove();
+            inspections++;
             System.out.printf("  Monkey inspects an item with a worry level of %s.%n", item.worryLevel());
             Item worriedItem = operation.operate(item);
             System.out.printf("    Worry level %s to %d.%n", operation, worriedItem.worryLevel());
@@ -81,5 +83,9 @@ public class Monkey {
             thrown.getOrDefault(monkeySelector.apply(item.worryLevel()), new ArrayList<>()).add(item);
         }
         return thrown;
+    }
+
+    public int inspections() {
+        return inspections;
     }
 }
