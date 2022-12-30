@@ -10,6 +10,8 @@ public class Main {
         Monkeys monkeys = readMonkeys();
         for (int round = 0; round < 20; round++) {
             monkeys.playOneRound();
+            System.out.printf("After round %d, the monkeys are holding items with these worry levels:%n", round);
+            monkeys.printItems();
         }
         System.out.printf("Monkey business level: %d%n", monkeys.monkeyBusiness());
     }
