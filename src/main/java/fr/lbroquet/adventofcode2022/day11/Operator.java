@@ -20,8 +20,8 @@ public enum Operator {
         };
     }
 
-    public WorryLevel apply(WorryLevel oldWorryLevel, WorryLevel operand) {
-        return application.apply(oldWorryLevel, operand);
+    public WorryLevel apply(WorryLevel oldWorryLevel, WorryLevel operand, int divisorsProduct) {
+        return application.apply(oldWorryLevel, operand).modulo(divisorsProduct);
     }
 
     @Override

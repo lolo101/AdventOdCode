@@ -17,8 +17,8 @@ public class Operation {
         operand = new Operand(matcher.group("operand"));
     }
 
-    public WorryLevel operate(WorryLevel item) {
-        return operator.apply(item, operand.old(item));
+    public WorryLevel operate(WorryLevel item, int divisorsProduct) {
+        return operator.apply(item, operand.old(item), divisorsProduct);
     }
 
     @Override

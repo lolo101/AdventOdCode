@@ -1,26 +1,24 @@
 package fr.lbroquet.adventofcode2022.day11;
 
-import java.math.BigInteger;
-
-public record WorryLevel(BigInteger value) {
-    public WorryLevel(int value) {
-        this(BigInteger.valueOf(value));
-    }
-
+public record WorryLevel(long value) {
     public WorryLevel(String operand) {
-        this(new BigInteger(operand));
+        this(Long.parseLong(operand));
     }
 
     public WorryLevel plus(WorryLevel other) {
-        return new WorryLevel(value.add(other.value));
+        return new WorryLevel(Math.addExact(value, other.value));
     }
 
     public WorryLevel times(WorryLevel other) {
-        return new WorryLevel(value.multiply(other.value));
+        return new WorryLevel(Math.multiplyExact(value, other.value));
+    }
+
+    public WorryLevel modulo(int divisorsProduct) {
+        return new WorryLevel(value % divisorsProduct);
     }
 
     public boolean divisibleBy(int divisor) {
-        return value.divideAndRemainder(BigInteger.valueOf(divisor))[1].equals(BigInteger.ZERO);
+        return value % divisor == 0;
     }
 
     @Override

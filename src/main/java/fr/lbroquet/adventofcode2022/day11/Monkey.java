@@ -23,16 +23,22 @@ public class Monkey {
     private final MonkeyNumber number;
     private final Queue<WorryLevel> items;
     private final Operation operation;
+    private final int divisor;
     private final Function<WorryLevel, MonkeyNumber> monkeySelector;
-    private int inspections;
+    private long inspections;
 
-    private Monkey(int number, String[] items, String operation, Function<WorryLevel, MonkeyNumber> monkeySelector) {
+    private Monkey(int number,
+                   String[] items,
+                   String operation,
+                   int divisor,
+                   Function<WorryLevel, MonkeyNumber> monkeySelector) {
         this.number = new MonkeyNumber(number);
         this.items = Stream.of(items)
                 .mapToInt(Integer::parseInt)
                 .mapToObj(WorryLevel::new)
                 .collect(toCollection(ArrayDeque::new));
         this.operation = new Operation(operation);
+        this.divisor = divisor;
         this.monkeySelector = monkeySelector;
     }
 
@@ -44,7 +50,7 @@ public class Monkey {
         int ifTrue = Integer.parseInt(read(IF_TRUE_PATTERN, "targetWhenTrue", reader.readLine()));
         int ifFalse = Integer.parseInt(read(IF_FALSE_PATTERN, "targetWhenFalse", reader.readLine()));
         reader.readLine();
-        return new Monkey(number, items, operation, selector(divisor, ifTrue, ifFalse));
+        return new Monkey(number, items, operation, divisor, selector(divisor, ifTrue, ifFalse));
     }
 
     private static String read(Pattern pattern, String groupName, String line) {
@@ -61,21 +67,25 @@ public class Monkey {
         return number;
     }
 
-    public int inspections() {
+    public int divisor() {
+        return divisor;
+    }
+
+    public long inspections() {
         return inspections;
     }
 
-    public void playOneRound(Map<MonkeyNumber, Monkey> monkeys) {
+    public void playOneRound(Map<MonkeyNumber, Monkey> monkeys, int divisorsProduct) {
         while (!items.isEmpty()) {
             WorryLevel item = items.remove();
-            WorryLevel inspectedItem = inspect(item);
+            WorryLevel inspectedItem = inspect(item, divisorsProduct);
             MonkeyNumber target = monkeySelector.apply(inspectedItem);
             monkeys.get(target).items.add(inspectedItem);
         }
     }
 
-    private WorryLevel inspect(WorryLevel item) {
+    private WorryLevel inspect(WorryLevel item, int divisorsProduct) {
         inspections++;
-        return operation.operate(item);
+        return operation.operate(item, divisorsProduct);
     }
 }
