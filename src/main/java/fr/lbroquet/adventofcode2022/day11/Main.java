@@ -7,11 +7,11 @@ import java.io.IOException;
 
 public class Main {
 
-    private static final int NUMBER_OF_RONDS = 10_000;
+    private static final int NUMBER_OF_ROUNDS = 10_000;
 
     public static void main(String[] args) throws IOException {
         Monkeys monkeys = readMonkeys();
-        for (int round = 0; round < NUMBER_OF_RONDS; round++) {
+        for (int round = 0; round < NUMBER_OF_ROUNDS; round++) {
             System.out.println("Round " + round);
             monkeys.playOneRound();
         }
