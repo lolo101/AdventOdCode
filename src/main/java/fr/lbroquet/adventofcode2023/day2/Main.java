@@ -35,17 +35,17 @@ public class Main {
         if (matcher.matches()) {
             String id = matcher.group("id");
             String subsets = matcher.group("subsets");
-            Collection<CubeSet> cubeSubsets = toCubesSets(subsets);
+            Collection<CubeSet> cubeSubsets = toCubeSets(subsets);
             return new Game(Long.parseLong(id), cubeSubsets);
         }
         throw new IllegalArgumentException(line);
     }
 
-    private static Collection<CubeSet> toCubesSets(String cubeSubsets) {
-        return Stream.of(cubeSubsets.split(";")).map(Main::toCubesSet).toList();
+    private static Collection<CubeSet> toCubeSets(String cubeSubsets) {
+        return Stream.of(cubeSubsets.split(";")).map(Main::toCubeSet).toList();
     }
 
-    private static CubeSet toCubesSet(String subset) {
+    private static CubeSet toCubeSet(String subset) {
         List<ColorCount> colorCounts = Stream.of(subset.split(",")).map(Main::toColorCount).toList();
         Map<String, Integer> countsByColor = colorCounts.stream().collect(toMap(ColorCount::color, ColorCount::count));
         return new CubeSet(
