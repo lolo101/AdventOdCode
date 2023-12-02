@@ -24,8 +24,10 @@ public class Main {
 
     public static void main(String[] args) {
         BufferedReader input = Input.load(Main.class);
-        long sum = input.lines().map(Main::toGame).filter(game -> game.isPossible(constraints)).mapToLong(Game::id).sum();
-        System.out.printf("Sum id IDs of possible games: %d%n", sum);
+//        long sum = input.lines().map(Main::toGame).filter(game -> game.isPossible(constraints)).mapToLong(Game::id).sum();
+//        System.out.printf("Sum of IDs of possible games: %d%n", sum);
+        long powerSum = input.lines().map(Main::toGame).map(Game::minimumCubeSet).mapToLong(CubeSet::power).sum();
+        System.out.printf("Sum of powers of minimum sets: %d%n", powerSum);
     }
 
     private static Game toGame(String line) {
@@ -33,20 +35,20 @@ public class Main {
         if (matcher.matches()) {
             String id = matcher.group("id");
             String subsets = matcher.group("subsets");
-            Collection<CubesSubset> cubesSubsets = toCubesSubsets(subsets);
-            return new Game(Long.parseLong(id), cubesSubsets);
+            Collection<CubeSet> cubeSubsets = toCubesSets(subsets);
+            return new Game(Long.parseLong(id), cubeSubsets);
         }
         throw new IllegalArgumentException(line);
     }
 
-    private static Collection<CubesSubset> toCubesSubsets(String cubesSubsets) {
-        return Stream.of(cubesSubsets.split(";")).map(Main::toCubesSubset).toList();
+    private static Collection<CubeSet> toCubesSets(String cubeSubsets) {
+        return Stream.of(cubeSubsets.split(";")).map(Main::toCubesSet).toList();
     }
 
-    private static CubesSubset toCubesSubset(String subset) {
+    private static CubeSet toCubesSet(String subset) {
         List<ColorCount> colorCounts = Stream.of(subset.split(",")).map(Main::toColorCount).toList();
         Map<String, Integer> countsByColor = colorCounts.stream().collect(toMap(ColorCount::color, ColorCount::count));
-        return new CubesSubset(
+        return new CubeSet(
                 countsByColor.getOrDefault("red", 0),
                 countsByColor.getOrDefault("green", 0),
                 countsByColor.getOrDefault("blue", 0)
