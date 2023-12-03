@@ -14,12 +14,18 @@ import static java.util.Comparator.comparing;
 public class Main {
     private static final Collection<PartNumber> partNumbers = new ArrayList<>();
     private static final SortedSet<Symbol> symbols = new TreeSet<>(comparing(Symbol::row).thenComparing(Symbol::column));
+    private static final SortedSet<Gear> gears = new TreeSet<>(comparing(Gear::row).thenComparing(Gear::column));
 
     public static void main(String[] args) throws IOException {
         BufferedReader input = Input.load(Main.class);
         initialize(input);
+
         long sum = partNumbers.stream().filter(partNumber -> partNumber.isAdjacentToAny(symbols)).mapToLong(PartNumber::value).sum();
-        System.out.printf("Sum of part numbers:%d%n", sum);
+        System.out.printf("Sum of part numbers: %d%n", sum);
+
+        partNumbers.forEach(partNumber -> partNumber.attachTo(gears));
+        long ratios = gears.stream().filter(Gear::isProperlyConnected).mapToLong(Gear::ratio).sum();
+        System.out.printf("Sum of gear ratios: %d%n", ratios);
     }
 
     private static void initialize(BufferedReader input) throws IOException {
@@ -38,6 +44,9 @@ public class Main {
                     if (isSymbol(columnChar)) {
                         symbols.add(new Symbol(row, column));
                     }
+                    if (isGear(columnChar)) {
+                        gears.add(new Gear(row, column));
+                    }
                 }
             }
             numberFinished(partNumberAccumulator, row, column);
@@ -51,6 +60,10 @@ public class Main {
 
     private static boolean isSymbol(char columnChar) {
         return !isNumber(columnChar) && columnChar != '.';
+    }
+
+    private static boolean isGear(char columnChar) {
+        return columnChar == '*';
     }
 
     private static void numberFinished(StringBuilder partNumberAccumulator, int row, int column) {
