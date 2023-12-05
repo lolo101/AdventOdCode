@@ -4,7 +4,10 @@ import fr.lbroquet.Input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -25,7 +28,13 @@ public class Main {
         String line = input.readLine();
         String[] seeds = line.substring("seeds: ".length()).split(" ");
         input.readLine();
-        return new Seeds(Arrays.stream(seeds).map(Long::parseLong).toList());
+
+        List<Long> pairs = Arrays.stream(seeds).map(Long::parseLong).toList();
+        Collection<Range> ranges = new ArrayList<>();
+        for (int pair = 0; pair < pairs.size(); pair += 2) {
+            ranges.add(new Range(pairs.get(pair), pairs.get(pair + 1)));
+        }
+        return new Seeds(new Ranges(ranges));
     }
 
 }

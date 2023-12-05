@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Lights {
-    private final Collection<Long> lights;
+    private final Ranges lights;
 
-    public Lights(Collection<Long> lights) {
+    public Lights(Ranges lights) {
         this.lights = lights;
     }
 

@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Humidities {
-    private final Collection<Long> humidities;
+    private final Ranges humidities;
 
-    public Humidities(Collection<Long> humidities) {
+    public Humidities(Ranges humidities) {
         this.humidities = humidities;
     }
 

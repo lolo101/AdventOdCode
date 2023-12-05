@@ -1,5 +1,6 @@
 package fr.lbroquet.adventofcode2023.day5;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -16,15 +17,29 @@ public class Mappings {
         mappings.add(new Mapping(sourceRangeStart, destinationRangeStart, rangeLength));
     }
 
-    public Collection<Long> map(Collection<Long> list) {
-        return list.stream().map(this::map).toList();
+    public Ranges map(Ranges ranges) {
+        Collection<Range> mapped = ranges.components().stream().map(this::map).flatMap(Collection::stream).toList();
+        return new Ranges(mapped);
     }
 
-    private Long map(Long from) {
-        return mappings.stream()
-                .filter(mapping -> mapping.contains(from))
-                .mapToLong(value -> value.map(from))
-                .findFirst()
-                .orElse(from);
+    private Collection<Range> map(Range range) {
+        Collection<Range> mappeds = new ArrayList<>();
+        Range unmapped = range;
+
+        for (Mapping mapping : mappings) {
+            if (mapping.overlap(unmapped)) {
+                mappeds.add(mapping.map(unmapped));
+            }
+            Range under = mapping.rangeUnder(unmapped);
+            if (under.length() > 0) {
+                mappeds.add(under);
+            }
+            unmapped = mapping.rangeAbove(unmapped);
+            if (unmapped.length() <= 0) {
+                return mappeds;
+            }
+        }
+
+        return mappeds;
     }
 }

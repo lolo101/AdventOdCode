@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Temperatures {
-    private final Collection<Long> temperatures;
+    private final Ranges temperatures;
 
-    public Temperatures(Collection<Long> temperatures) {
+    public Temperatures(Ranges temperatures) {
         this.temperatures = temperatures;
     }
 

@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Fertilizers {
-    private final Collection<Long> fertilizers;
+    private final Ranges fertilizers;
 
-    public Fertilizers(Collection<Long> fertilizers) {
+    public Fertilizers(Ranges fertilizers) {
         this.fertilizers = fertilizers;
     }
 

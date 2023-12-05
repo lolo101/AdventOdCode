@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Seeds {
-    private final Collection<Long> seeds;
+    private final Ranges seeds;
 
-    public Seeds(Collection<Long> seeds) {
+    public Seeds(Ranges seeds) {
         this.seeds = seeds;
     }
 

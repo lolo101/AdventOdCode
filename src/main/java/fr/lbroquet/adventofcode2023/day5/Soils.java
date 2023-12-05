@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Soils {
-    private final Collection<Long> soils;
+    private final Ranges soils;
 
-    public Soils(Collection<Long> soils) {
+    public Soils(Ranges soils) {
         this.soils = soils;
     }
 

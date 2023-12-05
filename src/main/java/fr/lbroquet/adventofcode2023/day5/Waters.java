@@ -2,14 +2,13 @@ package fr.lbroquet.adventofcode2023.day5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Collection;
 
 import static fr.lbroquet.adventofcode2023.day5.Step.step;
 
 public class Waters {
-    private final Collection<Long> waters;
+    private final Ranges waters;
 
-    public Waters(Collection<Long> waters) {
+    public Waters(Ranges waters) {
         this.waters = waters;
     }
 
