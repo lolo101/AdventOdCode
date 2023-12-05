@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 public class Card {
     private final String[] winningNumbers;
     private final String[] havingNumbers;
+    private long copies = 1;
 
     public Card(String[] winningNumbers, String[] havingNumbers) {
         this.winningNumbers = winningNumbers;
@@ -14,8 +15,20 @@ public class Card {
     }
 
     public long points() {
-        List<String> winnings = Arrays.asList(winningNumbers);
-        long havingWinningNumbers = Stream.of(havingNumbers).filter(winnings::contains).count();
+        long havingWinningNumbers = wins();
         return havingWinningNumbers == 0 ? 0 : (long) Math.pow(2, havingWinningNumbers - 1);
+    }
+
+    public long copies() {
+        return copies;
+    }
+
+    public void copy(long times) {
+        copies += times;
+    }
+
+    public long wins() {
+        List<String> winnings = Arrays.asList(winningNumbers);
+        return Stream.of(havingNumbers).filter(winnings::contains).count();
     }
 }
