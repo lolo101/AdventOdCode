@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
 
-public class Lights extends Step {
+import static fr.lbroquet.adventofcode2023.day5.Step.step;
+
+public class Lights {
     private final Collection<Long> lights;
 
     public Lights(Collection<Long> lights) {

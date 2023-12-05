@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
 
-public class Temperatures extends Step {
+import static fr.lbroquet.adventofcode2023.day5.Step.step;
+
+public class Temperatures {
     private final Collection<Long> temperatures;
 
     public Temperatures(Collection<Long> temperatures) {

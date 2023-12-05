@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
 
-public class Soils extends Step {
+import static fr.lbroquet.adventofcode2023.day5.Step.step;
+
+public class Soils {
     private final Collection<Long> soils;
 
     public Soils(Collection<Long> soils) {
