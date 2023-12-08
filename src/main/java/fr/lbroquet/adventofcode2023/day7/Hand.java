@@ -1,7 +1,7 @@
 package fr.lbroquet.adventofcode2023.day7;
 
 public class Hand implements Comparable<Hand> {
-    private static final String STRENGTHS = "23456789TJQKA";
+    private static final String STRENGTHS = "J23456789TQKA";
     private final String cards;
     private final long bid;
     private final Type type;
