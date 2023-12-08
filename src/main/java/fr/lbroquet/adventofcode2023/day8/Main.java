@@ -4,6 +4,7 @@ import fr.lbroquet.Input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -21,20 +22,38 @@ public class Main {
             input.readLine();
             input.lines().forEach(Main::addToNetwork);
 
-            Node currentNode = new Node("AAA");
-            Node destination = new Node("ZZZ");
-            long step = 0;
-            for (int leftRightsIndex = 0; !currentNode.equals(destination); leftRightsIndex = (leftRightsIndex + 1) % leftRights.length()) {
-                char direction = leftRights.charAt(leftRightsIndex);
-                Neighborhood neighborhood = NETWORK.get(currentNode);
-                currentNode = move(direction, neighborhood);
-                step++;
-            }
-            System.out.printf("Steps: %d%n", step);
+            List<Long> steps = NETWORK.keySet().stream().filter(Node::isDeparture).map(node -> walk(node, leftRights)).toList();
+            System.out.printf("Steps: %s%n", steps);
+            long stepsToSync = steps.stream().reduce(1L, Main::synchronize);
+            System.out.printf("Steps needed to reach arrivals at the same time: %s%n", stepsToSync);
         }
     }
 
-    private static Node move(char direction, Neighborhood neighborhood) {
+    private static long synchronize(long steps1, long steps2) {
+        return (steps1 * steps2) / gcd(steps1, steps2);
+    }
+
+    /*
+     * Euclidean algorithm
+     * Shamelessly copy-pasted from https://stackoverflow.com/a/4009247/4296029
+     */
+    private static long gcd(long a, long b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
+    }
+
+    private static long walk(Node node, String leftRights) {
+        long steps = 0;
+        for (int leftRightsIndex = 0; !node.isArrival(); leftRightsIndex = (leftRightsIndex + 1) % leftRights.length()) {
+            char direction = leftRights.charAt(leftRightsIndex);
+            Neighborhood neighborhood = NETWORK.get(node);
+            node = step(neighborhood, direction);
+            steps++;
+        }
+        return steps;
+    }
+
+    private static Node step(Neighborhood neighborhood, char direction) {
         if (direction == 'L') return neighborhood.left();
         if (direction == 'R') return neighborhood.right();
         throw new IllegalArgumentException(String.valueOf(direction));
