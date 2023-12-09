@@ -11,10 +11,18 @@ public class Sequence {
         this.values = values;
     }
 
-    public long extrapolate() {
+    public long extrapolateForward() {
         long extrapolation = 0;
         for (long[] toto : derivationOrders().reversed()) {
             extrapolation = toto[toto.length - 1] + extrapolation;
+        }
+        return extrapolation;
+    }
+
+    public long extrapolateBackward() {
+        long extrapolation = 0;
+        for (long[] toto : derivationOrders().reversed()) {
+            extrapolation = toto[0] - extrapolation;
         }
         return extrapolation;
     }
