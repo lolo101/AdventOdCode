@@ -2,7 +2,7 @@ package fr.lbroquet.adventofcode2023.day10;
 
 import java.util.Objects;
 
-public record Node(int row, int column, long distance) {
+public record Node(int row, int column, long distance, Node parent) {
     @Override
     public boolean equals(Object o) {
         return o instanceof Node other

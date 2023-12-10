@@ -49,7 +49,7 @@ public class Maze {
             char[] mazeRow = mazeArray[row];
             for (int column = 0; column < mazeRow.length; column++) {
                 if (mazeRow[column] == 'S') {
-                    return new Node(row, column, 0);
+                    return new Node(row, column, 0, null);
                 }
             }
         }
@@ -57,62 +57,60 @@ public class Maze {
     }
 
     private Optional<Node> northNode(Node node) {
-        if (node.row() > 0) {
+        if (node.row() > 0 && connectsNorth(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row() - 1][node.column()];
             if (connectsSouth(pipe)) {
-                return Optional.of(new Node(node.row() - 1, node.column(), node.distance() + 1));
+                return Optional.of(new Node(node.row() - 1, node.column(), node.distance() + 1, node));
             }
         }
         return Optional.empty();
     }
 
     private static boolean connectsSouth(char pipe) {
-        return pipe == '|' || pipe == '7' || pipe == 'F';
+        return pipe == '|' || pipe == '7' || pipe == 'F' || pipe == 'S';
     }
 
     private Optional<Node> eastNode(Node node) {
         char[] mazeRow = mazeArray[node.row()];
-        if (node.column() < mazeRow.length - 1) {
+        if (node.column() < mazeRow.length - 1 && connectsEast(mazeArray[node.row()][node.column()])) {
             char pipe = mazeRow[node.column() + 1];
             if (connectsWest(pipe)) {
-                return Optional.of(new Node(node.row(), node.column() + 1, node.distance() + 1));
+                return Optional.of(new Node(node.row(), node.column() + 1, node.distance() + 1, node));
             }
         }
         return Optional.empty();
     }
 
     private static boolean connectsWest(char pipe) {
-        return pipe == '-' || pipe == 'J' || pipe == '7';
+        return pipe == '-' || pipe == 'J' || pipe == '7' || pipe == 'S';
     }
 
-
     private Optional<Node> southNode(Node node) {
-        if (node.row() < mazeArray.length - 1) {
+        if (node.row() < mazeArray.length - 1 && connectsSouth(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row() + 1][node.column()];
             if (connectsNorth(pipe)) {
-                return Optional.of(new Node(node.row() + 1, node.column(), node.distance() + 1));
+                return Optional.of(new Node(node.row() + 1, node.column(), node.distance() + 1, node));
             }
         }
         return Optional.empty();
     }
 
     private static boolean connectsNorth(char pipe) {
-        return pipe == '|' || pipe == 'L' || pipe == 'J';
+        return pipe == '|' || pipe == 'L' || pipe == 'J' || pipe == 'S';
     }
 
-
     private Optional<Node> westNode(Node node) {
-        if (node.column() > 0) {
+        if (node.column() > 0 && connectsWest(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row()][node.column() - 1];
             if (connectsEast(pipe)) {
-                return Optional.of(new Node(node.row(), node.column() - 1, node.distance() + 1));
+                return Optional.of(new Node(node.row(), node.column() - 1, node.distance() + 1, node));
             }
         }
         return Optional.empty();
     }
 
     private static boolean connectsEast(char pipe) {
-        return pipe == '-' || pipe == 'L' || pipe == 'F';
+        return pipe == '-' || pipe == 'L' || pipe == 'F' || pipe == 'S';
     }
 
     public String distanceMap() {
