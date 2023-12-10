@@ -113,40 +113,100 @@ public class Maze {
         return pipe == '-' || pipe == 'L' || pipe == 'F' || pipe == 'S';
     }
 
-    public String distanceMap() {
+    public String loopMap() {
         Map<Integer, Map<Integer, Long>> distanceByRowAndColumn = visitedNodes.stream().collect(groupingBy(Node::row, toMap(Node::column, Node::distance)));
 
         StringBuilder distanceMap = new StringBuilder();
         for (int row = 0; row < mazeArray.length; row++) {
             char[] mazeRow = mazeArray[row];
             for (int column = 0; column < mazeRow.length; column++) {
-                distanceMap.append(mazeNode(distanceByRowAndColumn, row, column, mazeRow[column]));
+                char pipe = mazeRow[column];
+                String nodeString = visitedNode(distanceByRowAndColumn, row, column)
+                        .map(distance -> STR."\{(char) 27}[31m\{asciiArt(pipe)}\{(char) 27}[39m")
+                        .orElse(asciiArt(pipe));
+                distanceMap.append(nodeString);
             }
             distanceMap.append('\n');
         }
         return distanceMap.toString();
     }
 
-    private static String mazeNode(Map<Integer, Map<Integer, Long>> distanceByRowAndColumn, int row, int column, char pipe) {
+    public String partitionMap() {
+        replaceStartingNodeChar();
+        Map<Integer, Map<Integer, Long>> distanceByRowAndColumn = visitedNodes.stream().collect(groupingBy(Node::row, toMap(Node::column, Node::distance)));
+        StringBuilder partitionMap = new StringBuilder();
+        int crossingValue = 0;
+        for (int row = 0; row < mazeArray.length; row++) {
+            char[] mazeRow = mazeArray[row];
+            for (int column = 0; column < mazeRow.length; column++) {
+                char pipe = mazeRow[column];
+                boolean walkingOnLoop = visitedNode(distanceByRowAndColumn, row, column).isPresent();
+                if (walkingOnLoop) crossingValue += loopCrossingValue(pipe);
+                partitionMap.append(partitionArt(walkingOnLoop, crossingValue / 2, pipe));
+            }
+            partitionMap.append('\n');
+        }
+        return partitionMap.toString();
+    }
+
+    private void replaceStartingNodeChar() {
+        Node startingNode = findStartingNode();
+        mazeArray[startingNode.row()][startingNode.column()] = nodeChar(startingNode);
+    }
+
+    private char nodeChar(Node startingNode) {
+        boolean connectsNorth = connectsSouth(mazeArray[startingNode.row() - 1][startingNode.column()]);
+        boolean connectsEast = connectsWest(mazeArray[startingNode.row()][startingNode.column() + 1]);
+        boolean connectsSouth = connectsNorth(mazeArray[startingNode.row() + 1][startingNode.column()]);
+        boolean connectsWest = connectsEast(mazeArray[startingNode.row()][startingNode.column() - 1]);
+        if (connectsNorth && connectsSouth) return '|';
+        if (connectsEast && connectsWest) return '-';
+        if (connectsNorth && connectsEast) return 'L';
+        if (connectsNorth && connectsWest) return 'J';
+        if (connectsSouth && connectsWest) return '7';
+        if (connectsSouth && connectsEast) return 'F';
+        return '?';
+    }
+
+    private static Optional<Long> visitedNode(Map<Integer, Map<Integer, Long>> distanceByRowAndColumn, int row, int column) {
         Map<Integer, Long> distanceByColumn = distanceByRowAndColumn.get(row);
         if (distanceByColumn != null) {
             Long distance = distanceByColumn.get(column);
             if (distance != null) {
-                return "%04d ".formatted(distance);
+                return Optional.of(distance);
             }
         }
-        return asciiArt(pipe);
+        return Optional.empty();
+    }
+
+    private static int loopCrossingValue(char pipe) {
+        return switch (pipe) {
+            case '|' -> 2;
+            case 'F', 'J' -> 1;
+            case 'L', '7' -> -1;
+            default -> 0;
+        };
+    }
+
+    private static String partitionArt(boolean walkingOnLoop, int crossed, char pipe) {
+        if (walkingOnLoop) {
+            return STR."\{(char) 27}[37m\{asciiArt(pipe)}\{(char) 27}[39m";
+        }
+        return crossed % 2 == 0
+                ? STR."\{(char) 27}[32mO\{(char) 27}[39m"
+                : STR."\{(char) 27}[31mI\{(char) 27}[39m";
     }
 
     private static String asciiArt(char pipe) {
         return switch (pipe) {
-            case '|' -> "  ┃  ";
-            case '-' -> "━━━━━";
-            case 'L' -> "  ┗━━";
-            case 'J' -> "━━┛  ";
-            case '7' -> "━━┓  ";
-            case 'F' -> "  ┏━━";
-            default -> "     ";
+            case '|' -> "┃";
+            case '-' -> "━";
+            case 'L' -> "┗";
+            case 'J' -> "┛";
+            case '7' -> "┓";
+            case 'F' -> "┏";
+            case 'S' -> "S";
+            default -> " ";
         };
     }
 }
