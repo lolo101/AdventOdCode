@@ -3,9 +3,12 @@ package fr.lbroquet.adventofcode2023.day10;
 import java.util.*;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toMap;
 
 public class Maze {
     private final char[][] mazeArray;
+    private final Set<Node> visitedNodes = new TreeSet<>(comparing(Node::row).thenComparing(Node::column));
 
     public Maze(char[][] mazeArray) {
         this.mazeArray = mazeArray;
@@ -20,7 +23,7 @@ public class Maze {
     private Set<Node> visitMaze(Node startingNode) {
         Deque<Node> nodesToVisit = new LinkedList<>();
         nodesToVisit.add(startingNode);
-        Set<Node> visitedNodes = new TreeSet<>(comparing(Node::row).thenComparing(Node::column));
+        visitedNodes.clear();
 
         while (!nodesToVisit.isEmpty()) {
             Node node = nodesToVisit.removeFirst();
@@ -110,5 +113,42 @@ public class Maze {
 
     private static boolean connectsEast(char pipe) {
         return pipe == '-' || pipe == 'L' || pipe == 'F';
+    }
+
+    public String distanceMap() {
+        Map<Integer, Map<Integer, Long>> distanceByRowAndColumn = visitedNodes.stream().collect(groupingBy(Node::row, toMap(Node::column, Node::distance)));
+
+        StringBuilder distanceMap = new StringBuilder();
+        for (int row = 0; row < mazeArray.length; row++) {
+            char[] mazeRow = mazeArray[row];
+            for (int column = 0; column < mazeRow.length; column++) {
+                distanceMap.append(mazeNode(distanceByRowAndColumn, row, column, mazeRow[column]));
+            }
+            distanceMap.append('\n');
+        }
+        return distanceMap.toString();
+    }
+
+    private static String mazeNode(Map<Integer, Map<Integer, Long>> distanceByRowAndColumn, int row, int column, char pipe) {
+        Map<Integer, Long> distanceByColumn = distanceByRowAndColumn.get(row);
+        if (distanceByColumn != null) {
+            Long distance = distanceByColumn.get(column);
+            if (distance != null) {
+                return "%04d ".formatted(distance);
+            }
+        }
+        return asciiArt(pipe);
+    }
+
+    private static String asciiArt(char pipe) {
+        return switch (pipe) {
+            case '|' -> "  ┃  ";
+            case '-' -> "━━━━━";
+            case 'L' -> "  ┗━━";
+            case 'J' -> "━━┛  ";
+            case '7' -> "━━┓  ";
+            case 'F' -> "  ┏━━";
+            default -> "     ";
+        };
     }
 }

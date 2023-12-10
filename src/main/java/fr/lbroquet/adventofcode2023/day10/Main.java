@@ -11,6 +11,7 @@ public class Main {
             char[][] mazeArray = input.lines().map(String::toCharArray).toArray(char[][]::new);
             Maze maze = new Maze(mazeArray);
             System.out.printf("Farthest distance from start: %d%n", maze.farthestDistanceFromStart());
+            System.out.println(maze.distanceMap());
         }
     }
 }
