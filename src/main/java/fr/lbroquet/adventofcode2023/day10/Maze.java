@@ -49,7 +49,7 @@ public class Maze {
             char[] mazeRow = mazeArray[row];
             for (int column = 0; column < mazeRow.length; column++) {
                 if (mazeRow[column] == 'S') {
-                    return new Node(row, column, 0, null);
+                    return new Node(row, column, 0);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class Maze {
         if (node.row() > 0 && connectsNorth(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row() - 1][node.column()];
             if (connectsSouth(pipe)) {
-                return Optional.of(new Node(node.row() - 1, node.column(), node.distance() + 1, node));
+                return Optional.of(new Node(node.row() - 1, node.column(), node.distance() + 1));
             }
         }
         return Optional.empty();
@@ -75,7 +75,7 @@ public class Maze {
         if (node.column() < mazeRow.length - 1 && connectsEast(mazeArray[node.row()][node.column()])) {
             char pipe = mazeRow[node.column() + 1];
             if (connectsWest(pipe)) {
-                return Optional.of(new Node(node.row(), node.column() + 1, node.distance() + 1, node));
+                return Optional.of(new Node(node.row(), node.column() + 1, node.distance() + 1));
             }
         }
         return Optional.empty();
@@ -89,7 +89,7 @@ public class Maze {
         if (node.row() < mazeArray.length - 1 && connectsSouth(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row() + 1][node.column()];
             if (connectsNorth(pipe)) {
-                return Optional.of(new Node(node.row() + 1, node.column(), node.distance() + 1, node));
+                return Optional.of(new Node(node.row() + 1, node.column(), node.distance() + 1));
             }
         }
         return Optional.empty();
@@ -103,7 +103,7 @@ public class Maze {
         if (node.column() > 0 && connectsWest(mazeArray[node.row()][node.column()])) {
             char pipe = mazeArray[node.row()][node.column() - 1];
             if (connectsEast(pipe)) {
-                return Optional.of(new Node(node.row(), node.column() - 1, node.distance() + 1, node));
+                return Optional.of(new Node(node.row(), node.column() - 1, node.distance() + 1));
             }
         }
         return Optional.empty();
