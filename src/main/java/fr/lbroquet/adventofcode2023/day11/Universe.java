@@ -1,11 +1,11 @@
 package fr.lbroquet.adventofcode2023.day11;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class Universe {
     private final char[][] universeArray;
+    private final SortedSet<Integer> expandedRows = new TreeSet<>();
+    private final SortedSet<Integer> expandedColumns = new TreeSet<>();
 
     public Universe(char[][] universeArray) {
         this.universeArray = universeArray;
@@ -16,35 +16,33 @@ public class Universe {
     }
 
     private Collection<Long> distances() {
-        char[][] expandedUniverse = expandUniverse();
-        List<Galaxy> galaxies = galaxies(expandedUniverse);
+        expandUniverse();
+        List<Galaxy> galaxies = galaxies();
         Collection<Long> distances = new ArrayList<>();
-        for (int first = 0; first < galaxies(expandedUniverse).size() - 1; first++) {
+        for (int first = 0; first < galaxies.size() - 1; first++) {
             for (int second = first + 1; second < galaxies.size(); second++) {
                 Galaxy firstGalaxy = galaxies.get(first);
                 Galaxy secondGalaxy = galaxies.get(second);
-                distances.add(secondGalaxy.distanceFrom(firstGalaxy));
+                distances.add(secondGalaxy.distanceFrom(firstGalaxy, expandedRows, expandedColumns));
             }
         }
         return distances;
     }
 
-    private char[][] expandUniverse() {
-        char[][] expandedRows = expandRows(universeArray);
-        char[][] transposedExpandedRows = transpose(expandedRows);
-        char[][] transposedExpandedUniverse = expandRows(transposedExpandedRows);
-        return transpose(transposedExpandedUniverse);
+    private void expandUniverse() {
+        expandedRows.addAll(expandRows(universeArray));
+        char[][] transposedUniverse = transpose(universeArray);
+        expandedColumns.addAll(expandRows(transposedUniverse));
     }
 
-    private static char[][] expandRows(char[][] universeArray) {
-        Collection<char[]> expandedUniverse = new ArrayList<>();
-        for (char[] universeRow : universeArray) {
-            expandedUniverse.add(universeRow);
-            if (isOnlyVoid(universeRow)) {
-                expandedUniverse.add(universeRow);
+    private static Collection<Integer> expandRows(char[][] universeArray) {
+        Collection<Integer> expandedRows = new ArrayList<>();
+        for (int row = 0; row < universeArray.length; row++) {
+            if (isOnlyVoid(universeArray[row])) {
+                expandedRows.add(row);
             }
         }
-        return expandedUniverse.toArray(char[][]::new);
+        return expandedRows;
     }
 
     private static boolean isOnlyVoid(char[] universeRow) {
@@ -66,10 +64,10 @@ public class Universe {
         return transposed;
     }
 
-    private static List<Galaxy> galaxies(char[][] universe) {
+    private List<Galaxy> galaxies() {
         List<Galaxy> galaxies = new ArrayList<>();
-        for (int row = 0; row < universe.length; row++) {
-            char[] universeRow = universe[row];
+        for (int row = 0; row < universeArray.length; row++) {
+            char[] universeRow = universeArray[row];
             for (int column = 0; column < universeRow.length; column++) {
                 char universeCell = universeRow[column];
                 if (universeCell == '#') {
