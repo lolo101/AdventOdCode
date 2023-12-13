@@ -33,11 +33,17 @@ public class RecordRow {
         int contiguous = contiguousGroups.getFirst();
 
         if (chunk.length() < contiguous) {
-            if (chunk.contains("#")) return 0;
-            return arrangements(chunks, tail(contiguousGroups));
+            if (chunk.contains("#")) {
+                return 0;
+            }
+            return arrangements(tail(chunks), contiguousGroups);
         }
         if (chunk.length() == contiguous) {
-            return arrangements(tail(chunks), tail(contiguousGroups));
+            if (chunk.contains("#")) {
+                return arrangements(tail(chunks), tail(contiguousGroups));
+            }
+            return arrangements(tail(chunks), contiguousGroups)
+                    + arrangements(tail(chunks), tail(contiguousGroups));
         }
         if (chunk.startsWith("?")) {
             return arrangements(replaceHead(chunk.substring(1), tail(chunks)), contiguousGroups)
