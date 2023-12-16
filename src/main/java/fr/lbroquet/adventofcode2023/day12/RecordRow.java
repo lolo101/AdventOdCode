@@ -1,5 +1,6 @@
 package fr.lbroquet.adventofcode2023.day12;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,11 +15,33 @@ public class RecordRow {
         this.contiguousGroups = contiguousGroups;
     }
 
-    public long arrangements() {
+    public BigInteger arrangements() {
         List<String> chunks = new LinkedList<>(Arrays.asList(conditions.split("\\.")));
         List<Integer> groups = new LinkedList<>(Stream.of(contiguousGroups).mapToInt(Integer::parseInt).boxed().toList());
 
-        return arrangements(chunks, groups);
+//        groups = unfold(groups);
+        BigInteger arrangements = BigInteger.valueOf(arrangements(chunks, groups));
+
+        return arrangements.pow(5);
+    }
+
+    private static String unfold(String conditions) {
+        return String.join("?",
+                conditions,
+                conditions,
+                conditions,
+                conditions,
+                conditions);
+    }
+
+    private static <T> List<T> unfold(List<T> list) {
+        List<T> unfolded = new LinkedList<>();
+        unfolded.addAll(list);
+        unfolded.addAll(list);
+        unfolded.addAll(list);
+        unfolded.addAll(list);
+        unfolded.addAll(list);
+        return unfolded;
     }
 
     private static long arrangements(List<String> chunks, List<Integer> contiguousGroups) {

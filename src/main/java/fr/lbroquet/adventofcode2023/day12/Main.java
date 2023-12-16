@@ -4,6 +4,7 @@ import fr.lbroquet.Input;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         try (BufferedReader input = Input.load(Main.class)) {
-            long sum = input.lines().map(Main::toRecordRow).mapToLong(RecordRow::arrangements).sum();
+            BigInteger sum = input.lines().map(Main::toRecordRow).map(RecordRow::arrangements).reduce(BigInteger.ZERO, BigInteger::add);
             System.out.printf("Sum of arrangements in the records: %d%n", sum);
         }
     }
