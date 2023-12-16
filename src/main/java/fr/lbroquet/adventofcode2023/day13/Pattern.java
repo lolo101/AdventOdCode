@@ -45,11 +45,23 @@ public class Pattern {
 
     private boolean symetryAxleAfter(int row) {
         int rowsToCompare = min(blockLines.size() - row, row);
+        int numerOfSmudges = 0;
         for (int offset = 0; offset < rowsToCompare; offset++) {
             String rowAbove = blockLines.get(row - offset - 1);
             String rowUnder = blockLines.get(row + offset);
-            if (!rowAbove.equals(rowUnder)) return false;
+            numerOfSmudges += smudges(rowAbove, rowUnder);
+            if (numerOfSmudges > 1) return false;
         }
-        return true;
+        return numerOfSmudges == 1;
+    }
+
+    private static int smudges(String rowAbove, String rowUnder) {
+        char[] charsAbove = rowAbove.toCharArray();
+        char[] charsUnder = rowUnder.toCharArray();
+        int smudges = 0;
+        for (int column = 0; column < charsAbove.length; column++) {
+            smudges += charsAbove[column] == charsUnder[column] ? 0 : 1;
+        }
+        return smudges;
     }
 }
